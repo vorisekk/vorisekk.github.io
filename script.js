@@ -50,7 +50,7 @@ const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2);
 scene.add(ambientLight);
 
 function addLamp(x,y,z){
-    const pl = new THREE.PointLight(0xffc379,3,25,0.95);
+    const pl = new THREE.PointLight(0xffc379,0.3,1.5,0.95);
     pl.position.set(x,y,z);
     
     sceneGroup.add(pl);
@@ -267,11 +267,10 @@ const divisions = 100;
 
 const axesHelper = new THREE.AxesHelper( 5 );
 const gridHelper = new THREE.GridHelper( size, divisions );
-scene.add( axesHelper );
 
 const flyControls = new FlyControls(camera, renderer.domElement);
 
-flyControls.movementSpeed = 7;
+flyControls.movementSpeed = 1;
 flyControls.rollSpeed = .5;
 
 flyControls.dragToLook = true;
@@ -283,8 +282,9 @@ document.addEventListener("resize", (event) => {
 });
 
 scene.add(sceneGroup);
+sceneGroup.scale.set(0.1,0.1,0.1);
 
-camera.position.set(0,3,0);
+camera.position.set(0,0.2,0);
 camera.rotation.set(0,1/2*Math.PI,0);
 
 function getDist(object){
@@ -294,7 +294,7 @@ function getDist(object){
     const cameraPosition = camera.position; // Camera's position
     const distance = cameraPosition.distanceTo(objectPosition); // Calculate distance
     
-    const threshold = 7; // Define close range
+    const threshold = .5; // Define close range
     if (distance < threshold) {
         return true;
     }
@@ -308,7 +308,7 @@ function animate() {
 
     flyControls.update(0.05);
 
-    for (let i = 0; i<kocicky.length-7; i++){
+    for (let i = 0; i<kocicky.length-6; i++){
         if (kocicky[i].kocicka){
             if(getDist(kocicky[i].head)){
                 kocicky[i].purr();
@@ -319,7 +319,7 @@ function animate() {
             }
         }
     }
-    for (let i = kocicky.length-7; i<kocicky.length; i++){
+    for (let i = kocicky.length-6; i<kocicky.length; i++){
         if (kocicky[i].kocicka){
             kocicky[i].dance();
             kocicky[i].meow();
