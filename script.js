@@ -46,7 +46,7 @@ document.body.appendChild( VRButton.createButton( renderer ) );
 renderer.xr.enabled = true;
 
 // LIGHTS
-const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
+const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2);
 scene.add(ambientLight);
 
 function addLamp(x,y,z){
