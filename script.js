@@ -17,7 +17,7 @@ function map(in_min, in_max, out_min, out_max) {
 let time = 0;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 scene.add(camera);
 
 const renderer = new THREE.WebGLRenderer();
@@ -282,11 +282,10 @@ document.addEventListener("resize", (event) => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-sceneGroup.position.set(25,-4,3);
 scene.add(sceneGroup);
 
-camera.position.set(-6,0,7);
-camera.rotation.set(0,10/9*Math.PI,0);
+camera.position.set(0,3,0);
+camera.rotation.set(0,1/2*Math.PI,0);
 
 function getDist(object){
     const objectPosition = new THREE.Vector3();
