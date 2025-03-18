@@ -50,7 +50,7 @@ const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2);
 scene.add(ambientLight);
 
 function addLamp(x,y,z){
-    const pl = new THREE.PointLight(0xffc379,0.6,3,0.95);
+    const pl = new THREE.PointLight(0xffc379,0.6,2,0.95);
     pl.position.set(x,y,z);
     
     sceneGroup.add(pl);
@@ -235,7 +235,7 @@ loader.load('models/piano.gltf',
             sound.setRefDistance(5);
             sound.setLoop(true);
             sound.setVolume(1.5);
-            sound.setDirectionalCone(40, 90, .25);
+            sound.setDirectionalCone(20, 60, 0.1);
 
             const speaker = new THREE.Mesh(
                 new THREE.BoxGeometry(0, 0, 0),
@@ -282,8 +282,8 @@ document.addEventListener("resize", (event) => {
 });
 
 scene.add(sceneGroup);
-sceneGroup.scale.set(0.2,0.2,0.2);
-sceneGroup.position.set(0,0.2,0);
+sceneGroup.scale.set(0.13,0.13,0.13);
+sceneGroup.position.set(0,0.3,0);
 
 camera.position.set(0,0.2,0);
 camera.rotation.set(0,1/2*Math.PI,0);
@@ -295,7 +295,7 @@ function getDist(object){
     const cameraPosition = camera.position; // Camera's position
     const distance = cameraPosition.distanceTo(objectPosition); // Calculate distance
     
-    const threshold = 2; // Define close range
+    const threshold = 1; // Define close range
     if (distance < threshold) {
         return true;
     }
