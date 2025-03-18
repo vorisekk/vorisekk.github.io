@@ -283,7 +283,7 @@ document.addEventListener("resize", (event) => {
 
 scene.add(sceneGroup);
 sceneGroup.scale.set(0.13,0.13,0.13);
-sceneGroup.position.set(0,0.3,0);
+sceneGroup.position.set(0,0.9,0);
 
 camera.position.set(0,0.2,0);
 camera.rotation.set(0,1/2*Math.PI,0);
