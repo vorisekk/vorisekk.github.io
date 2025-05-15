@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 // SETUP
 let time = 0;
@@ -18,8 +18,13 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
-// AUDIO
+// 3D
 const gltfLoader = new GLTFLoader();
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath( 'decoder/' );
+gltfLoader.setDRACOLoader( dracoLoader );
+
+// AUDIO
 const listener = new THREE.AudioListener();
 const audioLoader = new THREE.AudioLoader();
 camera.add(listener);
