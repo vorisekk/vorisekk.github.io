@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
 // SETUP
 let time = 0;
@@ -33,6 +34,18 @@ const sceneGroup = new THREE.Group();
 // WEB XR
 document.body.appendChild( VRButton.createButton( renderer ) );
 renderer.xr.enabled = true;
+
+const controllerModelFactory = new XRControllerModelFactory();
+
+const controller1 = renderer.xr.getController(0);
+const controller2 = renderer.xr.getController(1);
+
+scene.add(controller1);
+scene.add(controller2);
+
+const controllerGrip1 = renderer.xr.getControllerGrip(0);
+controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
+scene.add(controllerGrip1);
 
 // LIGHTS
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, .1);
@@ -129,7 +142,7 @@ gltfLoader.load('models/mountain.glb',
 
         const scale=4;
 
-        mountain.position.set(30,-3,0);
+        mountain.position.set(30,-6,0);
         mountain.scale.set(scale,scale,scale);
 
         // audioLoader.load('sfx/happy.wav', (buffer) => {
@@ -155,7 +168,7 @@ gltfLoader.load('models/mountain.glb',
 	}
 );
 
-function getDist(object){
+function getDist(object, threshold){
     if (object){
         const objectPosition = new THREE.Vector3();
         object.getWorldPosition(objectPosition);
@@ -163,7 +176,6 @@ function getDist(object){
         const cameraPosition = camera.position;
         const distance = cameraPosition.distanceTo(objectPosition);
         
-        const threshold = 7;
         if (distance < threshold) {
             return true;
         }
@@ -173,13 +185,12 @@ function getDist(object){
     }
 }
 
-
 const groupScale = 1;
 sceneGroup.position.set(0,-1,0)
 sceneGroup.scale.set(groupScale,groupScale,groupScale)
 
 
-
+const text = document.getElementById("info-text");
 
 
 document.addEventListener("resize", (event) => {
@@ -189,14 +200,58 @@ document.addEventListener("resize", (event) => {
 });
 
 scene.add(sceneGroup);
+        
+let justPressed = false;
+let teleported = false;
+let lastCamPos = new THREE.Vector3();
 
-function animate() {    
-	renderer.render( scene, camera );
+let justTriggered = false;
+let triggerPressedLastFrame = false;
 
-    if (getDist(vase)){
-        console.log("AHOOOJ");
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        justPressed = true;
+    }
+});
+
+function animate() {
+    renderer.render(scene, camera);
+
+    const session = renderer.xr.getSession();
+    if (session) {
+        session.inputSources.forEach((inputSource) => {
+            const gamepad = inputSource.gamepad;
+            if (gamepad && gamepad.buttons[0]) {
+                const isPressed = gamepad.buttons[0].pressed;
+
+                if (isPressed && !triggerPressedLastFrame) {
+                    justTriggered = true;
+                }
+
+                triggerPressedLastFrame = isPressed;
+            }
+        });
     }
 
+    text.style.opacity = getDist(vase, 0.6) ? 1 : 0;
+
+    if (justPressed || justTriggered) {
+        if (!teleported && getDist(vase, 10)) {
+            lastCamPos.copy(camera.position);
+            camera.position.copy(new THREE.Vector3(mountain.position.x,camera.position.y,mountain.position.z));
+            yurt.visible = false;
+            teleported = true;
+
+        } else if (teleported && getDist(mountain, 5)) {
+            camera.position.copy(lastCamPos);
+            yurt.visible = true;
+            teleported = false;
+        }
+    }
+    
+    justTriggered = false;
+    justPressed = false;
+
     flyControls.update(0.1);
-    time++; 
+    time++;
 }
