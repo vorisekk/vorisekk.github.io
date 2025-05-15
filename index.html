@@ -2,9 +2,27 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Catcave</title>
+		<title>Mongolia</title>
 		<style>
-			body { margin: 0; }
+			body, html {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				height: 100%;
+			}
+			#info-text {
+				position: absolute;
+				top: 50%; /* or '50%' for center */
+				left: 50%;
+				transform: translateX(-50%);
+				font-size: 24px;
+				font-family: Arial, sans-serif;
+				color: white;
+				padding: 8px 16px;
+				border-radius: 5px;
+				z-index: 10;
+				pointer-events: none; /* allow clicks to pass through */
+			}
 		</style>
          <script type="importmap">
             {
@@ -17,5 +35,6 @@
 	</head>
 	<body>
 		<script type="module" src="/script.js"></script>
+		<div id="info-text">Press Trigger to enter another world</div>
 	</body>
 </html>
