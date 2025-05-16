@@ -74,23 +74,6 @@ flyControls.dragToLook = true;
 
 // SCENE
 
-// const textureLoader = new THREE.TextureLoader();
-// const heightMap = textureLoader.load("/assets/height.png");
-// const textureMap = textureLoader.load("/assets/map.png");
-
-// const mountainGeometry = new THREE.PlaneGeometry(100,100,1024,1024);
-// const mountainMaterial = new THREE.MeshStandardMaterial({
-//     color:'gray',
-//     map: textureMap,
-//     displacementMap: heightMap,
-//     displacementScale: 100
-// })
-
-// const mountain = new THREE.Mesh( mountainGeometry, mountainMaterial );
-// mountain.rotation.set(-Math.PI/2,0,0)
-
-// scene.add(mountain)
-
 const bgrLoader = new THREE.TextureLoader();
 bgrLoader.load('hdr/2.jpg', function (texture) {
     texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -99,12 +82,12 @@ bgrLoader.load('hdr/2.jpg', function (texture) {
     scene.environmentIntensity = .3;
 });
 
-let yurt, vase;
+let yurt, vase, music;
 gltfLoader.load('models/house.glb', 
     function (gltf) {
         yurt = gltf.scene;
 
-        const scale=.3;
+        const scale=1;
 
         yurt.position.set(0,0,-2);
         yurt.scale.set(scale,scale,scale);
@@ -117,17 +100,17 @@ gltfLoader.load('models/house.glb',
         vase.getWorldPosition(pointLight.position);
 
 
-        // audioLoader.load('sfx/happy.wav', (buffer) => {
-        //     let sound = new THREE.PositionalAudio(listener);
-        //     sound.setBuffer(buffer);
-        //     sound.setRefDistance(5);
-        //     sound.setLoop(true);
-        //     sound.setVolume(1);
+        audioLoader.load('sfx/yurt.mp3', (buffer) => {
+            music = new THREE.PositionalAudio(listener);
+            music.setBuffer(buffer);
+            music.setRefDistance(3);
+            music.setLoop(true);
+            music.setVolume(.5);
 
-        //     mountain.children[0].add(sound);
+            vase.add(music);
 
-        //     sound.play();
-        // });
+            music.play();
+        });
 
         sceneGroup.add(yurt, pointLight);
         console.log(yurt);
@@ -145,22 +128,22 @@ gltfLoader.load('models/mountain.glb',
     function (gltf) {
         mountain = gltf.scene;
 
-        const scale=4;
+        const scale=6;
 
-        mountain.position.set(30,-6,0);
+        mountain.position.set(100,-10,0);
         mountain.scale.set(scale,scale,scale);
 
-        // audioLoader.load('sfx/happy.wav', (buffer) => {
-        //     let sound = new THREE.PositionalAudio(listener);
-        //     sound.setBuffer(buffer);
-        //     sound.setRefDistance(5);
-        //     sound.setLoop(true);
-        //     sound.setVolume(1);
+        audioLoader.load('sfx/mountain.mp3', (buffer) => {
+            let sound = new THREE.PositionalAudio(listener);
+            sound.setBuffer(buffer);
+            sound.setRefDistance(1);
+            sound.setLoop(true);
+            sound.setVolume(1);
 
-        //     mountain.children[0].add(sound);
+            mountain.children[0].add(sound);
 
-        //     sound.play();
-        // });
+            sound.play();
+        });
 
 		sceneGroup.add(mountain);
         console.log(mountain);
@@ -208,7 +191,7 @@ scene.add(sceneGroup);
         
 let justPressed = false;
 let teleported = false;
-let lastCamPos = new THREE.Vector3();
+let lastPos = new THREE.Vector3();
 
 let justTriggered = false;
 let triggerPressedLastFrame = false;
@@ -238,19 +221,21 @@ function animate() {
         });
     }
 
-    text.style.opacity = getDist(vase, 0.6) ? 1 : 0;
+    text.style.opacity = getDist(vase, 2) && yurt.visible ? 1 : 0;
 
     if (justPressed || justTriggered) {
-        if (!teleported && getDist(vase, 10)) {
-            lastCamPos.copy(camera.position);
-            camera.position.copy(new THREE.Vector3(mountain.position.x,camera.position.y,mountain.position.z));
+        if (!teleported && getDist(vase, 2) && yurt.visible) {
+            lastPos.copy(mountain.position);
+            mountain.position.copy(new THREE.Vector3(camera.position.x,mountain.position.y,camera.position.z));
             yurt.visible = false;
             teleported = true;
+            music.setVolume(0);
 
-        } else if (teleported && getDist(mountain, 5)) {
-            camera.position.copy(lastCamPos);
+        } else if (teleported && getDist(mountain, 20)) {
+            mountain.position.copy(lastPos);
             yurt.visible = true;
             teleported = false;
+            music.setVolume(.5);
         }
     }
     
