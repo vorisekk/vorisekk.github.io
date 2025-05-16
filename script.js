@@ -87,7 +87,7 @@ gltfLoader.load('models/house.glb',
     function (gltf) {
         yurt = gltf.scene;
 
-        const scale=.7;
+        const scale=.5;
 
         yurt.position.set(0,0,-2);
         yurt.scale.set(scale,scale,scale);
@@ -130,7 +130,7 @@ gltfLoader.load('models/mountain.glb',
 
         const scale=6;
 
-        mountain.position.set(100,-10,0);
+        mountain.position.set(100,0,0);
         mountain.scale.set(scale,scale,scale);
 
         audioLoader.load('sfx/mountain.mp3', (buffer) => {
@@ -221,10 +221,10 @@ function animate() {
         });
     }
 
-    text.style.opacity = getDist(vase, 2) && yurt.visible ? 1 : 0;
+    text.style.opacity = getDist(vase, 1.5) && yurt.visible ? 1 : 0;
 
     if (justPressed || justTriggered) {
-        if (!teleported && getDist(vase, 2) && yurt.visible) {
+        if (!teleported && getDist(vase, 1.5) && yurt.visible) {
             lastPos.copy(mountain.position);
             mountain.position.copy(new THREE.Vector3(camera.position.x,mountain.position.y,camera.position.z));
             yurt.visible = false;
