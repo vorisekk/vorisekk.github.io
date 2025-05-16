@@ -89,7 +89,7 @@ gltfLoader.load('models/house.glb',
 
         const scale=.7;
 
-        yurt.position.set(0,0,0);
+        yurt.position.set(0,0,-2);
         yurt.scale.set(scale,scale,scale);
         yurt.rotation.set(0,-Math.PI/2,0);
 
@@ -174,7 +174,7 @@ function getDist(object, threshold){
 }
 
 const groupScale = 1;
-sceneGroup.position.set(0,-3,0)
+sceneGroup.position.set(0,0,0)
 sceneGroup.scale.set(groupScale,groupScale,groupScale)
 
 
