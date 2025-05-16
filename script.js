@@ -87,9 +87,9 @@ gltfLoader.load('models/house.glb',
     function (gltf) {
         yurt = gltf.scene;
 
-        const scale=.6;
+        const scale=.7;
 
-        yurt.position.set(0,0,-2);
+        yurt.position.set(0,0,0);
         yurt.scale.set(scale,scale,scale);
         yurt.rotation.set(0,-Math.PI/2,0);
 
