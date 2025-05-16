@@ -87,9 +87,9 @@ gltfLoader.load('models/house.glb',
     function (gltf) {
         yurt = gltf.scene;
 
-        const scale=.8;
+        const scale=.6;
 
-        yurt.position.set(0,0,-3);
+        yurt.position.set(0,0,-2);
         yurt.scale.set(scale,scale,scale);
         yurt.rotation.set(0,-Math.PI/2,0);
 
@@ -105,7 +105,7 @@ gltfLoader.load('models/house.glb',
             music.setBuffer(buffer);
             music.setRefDistance(3);
             music.setLoop(true);
-            music.setVolume(.5);
+            music.setVolume(1);
 
             vase.add(music);
 
